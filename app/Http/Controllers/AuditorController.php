@@ -36,35 +36,26 @@ class AuditorController extends Controller
                          ->with('success', 'Auditor registrado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Auditor $auditor)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Auditor $auditor)
     {
-        //
+        return view('auditores.edit', compact('auditor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Auditor $auditor)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'tipo' => 'required|in:Interno,Externo'
+        ]);
+
+        $auditor->update($request->all());
+
+        return redirect()->route('auditores.index')->with('success', 'Auditor actualizado.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Auditor $auditor)
     {
-        //
+        $auditor->delete();
+        return redirect()->route('auditores.index')->with('success', 'Auditor eliminado.');
     }
 }

@@ -10,8 +10,11 @@ use App\Http\Controllers\HallazgoController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login'); // Redirigimos al login por defecto
 });
+
+// Rutas Protegidas (Solo usuarios logueados)
+Route::middleware(['auth'])->group(function () {
     
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -89,3 +92,8 @@ Route::resource('unidades', UnidadController::class);
 Route::resource('auditores', AuditorController::class);
 Route::resource('auditorias', AuditoriaController::class);
 Route::resource('hallazgos', HallazgoController::class);
+
+    
+});
+
+require __DIR__.'/auth.php';

@@ -47,35 +47,40 @@ class AuditoriaController extends Controller
                          ->with('success', 'Auditoría programada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Auditoria $auditoria)
+   public function edit(Auditoria $auditoria)
     {
-        //
+        $unidades = Unidad::orderBy('nombre')->get();
+        $auditores = Auditor::orderBy('nombre')->get();
+        return view('auditorias.edit', compact('auditoria', 'unidades', 'auditores'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Auditoria $auditoria)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Auditoria $auditoria)
     {
-        //
+        $request->validate([
+            'unidad_id' => 'required|exists:unidades,id',
+            'auditor_id' => 'required|exists:auditores,id',
+            'tipo' => 'required|in:Interna,Externa',
+            'fecha_programada' => 'required|date',
+        ]);
+
+        $data = $request->all();
+        $data['realizada'] = $request->has('realizada');
+
+        $auditoria->update($data);
+
+        return redirect()->route('auditorias.index')->with('success', 'Auditoría actualizada.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Auditoria $auditoria)
     {
-        //
+        $auditoria->delete();
+        return redirect()->route('auditorias.index')->with('success', 'Auditoría eliminada.');
+    }
+
+    public function informe(Auditoria $auditoria)
+    {
+        // Cargamos los hallazgos relacionados con esta auditoría
+        $hallazgos = $auditoria->hallazgos()->get();
+        return view('auditorias.informe', compact('auditoria', 'hallazgos'));
     }
 }

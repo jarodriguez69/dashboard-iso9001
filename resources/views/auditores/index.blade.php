@@ -67,7 +67,12 @@
                                 @endif
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-outline-secondary">Editar</button>
+                                <a href="{{ route('auditores.edit', $auditor->id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <form action="{{ route('auditores.destroy', $auditor->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                </form>
                             </td>
                         </tr>
                         @empty

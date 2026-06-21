@@ -56,8 +56,14 @@
                             <td class="text-secondary text-wrap" style="max-width: 300px;">
                                 {{ $unidad->descripcion ?? 'Sin descripción' }}
                             </td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-secondary">Editar</button>
+                            <td class="d-flex gap-2">
+                                <a href="{{ route('unidades.edit', $unidad->id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                
+                                <form action="{{ route('unidades.destroy', $unidad->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                </form>
                             </td>
                         </tr>
                         @empty

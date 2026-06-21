@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <title>@yield('title', 'Dashboard ISO 9001')</title>
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
@@ -25,9 +25,9 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <h1 class="navbar-brand navbar-brand-autodark">
-            <a href="#">
-              <span class="text-primary me-2"><i class="ti ti-shield-check"></i></span>ISO 9001:2015
-            </a>
+            <img src="https://sistemaogj.com/public/vendor/adminlte/dist/img/AdminLTELogo.png" class="brand-image img-circle" style="opacity:.8; max-width: 20%;">
+            SGC Auditorías
+            
           </h1>
           <div class="collapse navbar-collapse" id="sidebar-menu">
             <ul class="navbar-nav pt-lg-3">
@@ -40,7 +40,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ route('unidades.index') }}" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-building-community"></i></span>
-                  <span class="nav-link-title">Unidades y Áreas</span>
+                  <span class="nav-link-title">Unidades</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -68,6 +68,24 @@
                 </a>
               </li>
             </ul>
+            @auth
+            <div class="mt-auto p-3 w-100 border-top">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="avatar avatar-sm bg-blue-lt me-2">{{ substr(Auth::user()->name, 0, 2) }}</span>
+                    <div class="d-flex flex-column text-truncate">
+                        <span class="font-weight-bold text-truncate">{{ Auth::user()->name }}</span>
+                        <span class="text-secondary small">{{ Auth::user()->rol ?? 'Auditor' }}</span>
+                    </div>
+                </div>
+                
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                        <i class="ti ti-logout me-2"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+            @endauth
           </div>
         </div>
       </aside>

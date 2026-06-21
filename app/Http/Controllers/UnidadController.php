@@ -36,35 +36,31 @@ class UnidadController extends Controller
                          ->with('success', 'Unidad creada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Unidad $unidad)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Unidad $unidad)
     {
-        //
+        return view('unidades.edit', compact('unidad'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Unidad $unidad)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string'
+        ]);
+
+        $unidad->update($request->all());
+
+        return redirect()->route('unidades.index')->with('success', 'Unidad actualizada correctamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Unidad $unidad)
     {
-        //
+        try {
+            $unidad->delete();
+            return redirect()->route('unidades.index')->with('success', 'Unidad eliminada.');
+        } catch (\Exception $e) {
+            return redirect()->route('unidades.index')->with('error', 'No se pudo eliminar la unidad. Asegúrate de que no esté asociada a auditorías o hallazgos.');
+        }
+       
     }
 }

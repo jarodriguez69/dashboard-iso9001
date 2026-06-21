@@ -71,7 +71,12 @@
                                 @endif
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary">Gestionar</button>
+                                <a href="{{ route('hallazgos.edit', $hallazgo->id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <form action="{{ route('hallazgos.destroy', $hallazgo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                </form>
                             </td>
                         </tr>
                         @empty

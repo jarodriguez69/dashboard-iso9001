@@ -38,35 +38,28 @@ class HallazgoController extends Controller
                          ->with('success', 'Hallazgo registrado y guardado en la base de datos.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Hallazgo $hallazgo)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Hallazgo $hallazgo)
     {
-        //
+        $auditorias = Auditoria::with('unidad')->orderBy('fecha_programada', 'desc')->get();
+        return view('hallazgos.edit', compact('hallazgo', 'auditorias'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Hallazgo $hallazgo)
     {
-        //
+        $request->validate([
+            'auditoria_id' => 'required|exists:auditorias,id',
+            'clasificacion' => 'required|string',
+            'desvio_detectado' => 'required|string',
+        ]);
+
+        $hallazgo->update($request->all());
+
+        return redirect()->route('hallazgos.index')->with('success', 'Hallazgo actualizado y gestionado.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Hallazgo $hallazgo)
     {
-        //
+        $hallazgo->delete();
+        return redirect()->route('hallazgos.index')->with('success', 'Hallazgo eliminado del sistema.');
     }
 }
