@@ -98,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('auditorias', AuditoriaController::class);
     Route::resource('hallazgos', HallazgoController::class);
 
+    
     Route::get('auditorias/{auditoria}/informe', [AuditoriaController::class, 'informe'])->name('auditorias.informe');
 });
 

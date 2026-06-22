@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('jurisdiccional')->default(false);
             $table->boolean('activo')->default(true);
             $table->string('centro_judicial')->nullable();
+            $table->string('domicilio')->nullable();
             $table->timestamps();
         });
     }

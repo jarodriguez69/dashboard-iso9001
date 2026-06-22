@@ -43,7 +43,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre del Área</th>
+                            <th>Nombre</th>
+                            <th>Domicilio</th>
+                            <th>Centro Judicial</th>
                             <th>Descripción</th>
                             <th>Acciones</th>
                         </tr>
@@ -53,6 +55,12 @@
                         <tr>
                             <td><span class="text-secondary">{{ $unidad->id }}</span></td>
                             <td class="font-weight-medium">{{ $unidad->nombre }}</td>
+                            <td class="text-secondary text-wrap" style="max-width: 300px;">
+                                {{ $unidad->domicilio ?? 'Sin domicilio' }}
+                            </td>
+                            <td class="text-secondary text-wrap" style="max-width: 300px;">
+                                {{ $unidad->centro_judicial ?? 'Sin centro judicial' }}
+                            </td>
                             <td class="text-secondary text-wrap" style="max-width: 300px;">
                                 {{ $unidad->descripcion ?? 'Sin descripción' }}
                             </td>

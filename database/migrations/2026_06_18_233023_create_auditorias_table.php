@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('auditorias', function (Blueprint $table) {
             $table->id();
             $table->foreignId('unidad_id')->constrained('unidades')->onDelete('cascade');
-            $table->foreignId('auditor_id')->constrained('auditores')->onDelete('cascade');
             $table->text('alcance')->nullable();
             $table->enum('tipo', ['Interna', 'Externa'])->default('Interna');
             $table->date('fecha_programada');

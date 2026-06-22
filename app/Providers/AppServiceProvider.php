@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator; // <-- ESTA ES LA LÍNEA CLAVE
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Le decimos a Laravel que use los estilos de Bootstrap 5
+        Paginator::useBootstrapFive();
     }
 }

@@ -58,7 +58,7 @@
                                 {{ \Carbon\Carbon::parse($auditoria->fecha_programada)->format('d/m/Y') }}
                             </td>
                             <td class="font-weight-medium">{{ $auditoria->unidad->nombre }}</td>
-                            <td>{{ $auditoria->auditor->nombre }}</td>
+                            <td>{{ $auditoria->auditores->pluck('nombre')->join(', ') }}</td>
                             <td>
                                 @if($auditoria->tipo == 'Interna')
                                     <span class="badge bg-green-lt">Interna</span>
@@ -80,7 +80,9 @@
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                                 </form>
-                                <a href="{{ route('auditorias.informe', $auditoria->id) }}" class="btn btn-sm btn-outline-info">Informe</a>
+                                <a href="{{ route('auditorias.informe', $auditoria->id) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                    <i class="ti ti-printer"></i> Imprimir Informe
+                                </a>
                             </td>
                         </tr>
                         @empty

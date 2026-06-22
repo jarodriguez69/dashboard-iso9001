@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Auditor extends Model
 {
-    protected $fillable = ['nombre', 'tipo'];
+    protected $fillable = ['nombre', 'tipo', 'firma'];
     protected $table = 'auditores';
 
     public function auditorias()
     {
-        return $this->hasMany(Auditoria::class);
+        return $this->belongsToMany(Auditoria::class);
     }
 }

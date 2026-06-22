@@ -18,7 +18,13 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+                    <div class="mb-3">
+                        <label class="form-label">Domicilio</label>
+                        <input type="text" name="domicilio" class="form-control @error('domicilio') is-invalid @enderror" placeholder="Ej: Calle Principal, Ciudad" value="{{ old('domicilio') }}">
+                        @error('domicilio')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>  
                     <div class="mb-3">
                         <label class="form-label">Centro Judicial</label>
                         <input type="text" name="centro_judicial" class="form-control @error('centro_judicial') is-invalid @enderror" placeholder="Ej: Centro Judicial de San José" value="{{ old('centro_judicial') }}">

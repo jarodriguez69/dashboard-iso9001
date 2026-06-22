@@ -8,10 +8,74 @@ use Illuminate\Http\Request;
 
 class HallazgoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Traemos los hallazgos con la info de la auditoría y la unidad
-        $hallazgos = Hallazgo::with('auditoria.unidad')->orderBy('created_at', 'desc')->get();
+        // 1. Iniciamos la consulta base
+        $query = Hallazgo::with('auditoria.unidad');
+
+        // 2. Aplicamos filtros si el usuario buscó algo
+        if ($request->filled('buscar')) {
+            $query->where('desvio_detectado', 'like', '%' . $request->buscar . '%')
+                ->orWhere('evidencia_objetiva', 'like', '%' . $request->buscar . '%')
+                ->orWhereHas('auditoria.unidad', function($q) use ($request) {
+                    $q->where('nombre', 'like', '%' . $request->buscar . '%');
+                })
+                // <-- AGREGAR ESTO para buscar también por fecha de la auditoría asociada
+                ->orWhereHas('auditoria', function($q) use ($request) {
+                    $q->where('fecha_programada', 'like', '%' . $request->buscar . '%');
+                });
+        }
+
+        if ($request->filled('clasificacion')) {
+            $query->where('clasificacion', $request->clasificacion);
+        }
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        // 3. ¿El usuario presionó el botón de Exportar?
+        if ($request->has('exportar')) {
+            $hallazgosExport = $query->orderBy('created_at', 'desc')->get();
+            $fileName = 'Hallazgos_SGC_' . date('Y-m-d') . '.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+
+            $callback = function() use($hallazgosExport) {
+                $file = fopen('php://output', 'w');
+                // Esto asegura que Excel lea bien los acentos (UTF-8 BOM)
+                fputs($file, "\xEF\xBB\xBF"); 
+                
+                // 1. Agregas el encabezado en la cabecera del CSV
+                fputcsv($file, ['ID', 'Unidad', 'Fecha Auditoría', 'Clasificación', 'Cláusula', 'Estado', 'Descripción del Desvío']);
+
+                // 2. Agregas el dato real dentro del ciclo foreach
+                foreach ($hallazgosExport as $h) {
+                    fputcsv($file, [
+                        $h->id,
+                        $h->auditoria->unidad->nombre ?? 'N/A',
+                        $h->auditoria->fecha_programada ?? 'N/A', 
+                        $h->clasificacion,
+                        $h->clausula,
+                        $h->estado,
+                        $h->desvio_detectado,
+                    ]);
+                }
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        }
+
+        // 4. Si no exporta, paginamos de a 10 registros y mantenemos la URL con sus filtros
+        $hallazgos = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->all());
+
         return view('hallazgos.index', compact('hallazgos'));
     }
 

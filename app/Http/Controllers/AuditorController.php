@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Auditor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AuditorController extends Controller
 {
@@ -22,18 +23,21 @@ class AuditorController extends Controller
 
     public function store(Request $request)
     {
-        // Validamos los datos
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'tipo' => 'required|in:Interno,Externo'
+            'tipo' => 'required',
+            'firma' => 'nullable|image|mimes:png,jpg,jpeg|max:1024', // Validamos que sea imagen < 1MB
         ]);
 
-        // Guardamos en la base de datos
-        Auditor::create($request->all());
+        $data = $request->all();
 
-        // Redirigimos con éxito
-        return redirect()->route('auditores.index')
-                         ->with('success', 'Auditor registrado correctamente.');
+        if ($request->hasFile('firma')) {
+            // Guardamos la imagen en la carpeta 'public/firmas'
+            $data['firma'] = $request->file('firma')->store('firmas', 'public');
+        }
+
+        Auditor::create($data);
+        return redirect()->route('auditores.index')->with('success', 'Auditor creado.');
     }
 
     public function edit(Auditor $auditor)
@@ -45,11 +49,22 @@ class AuditorController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'tipo' => 'required|in:Interno,Externo'
+            'tipo' => 'required',
+            'firma' => 'nullable|image|mimes:png,jpg,jpeg|max:1024',
         ]);
 
-        $auditor->update($request->all());
+        $data = $request->all();
 
+        if ($request->hasFile('firma')) {
+            // Ahora puedes usar Storage directamente de forma limpia
+            if($auditor->firma) { 
+                Storage::disk('public')->delete($auditor->firma); 
+            }
+            
+            $data['firma'] = $request->file('firma')->store('firmas', 'public');
+        }
+
+        $auditor->update($data);
         return redirect()->route('auditores.index')->with('success', 'Auditor actualizado.');
     }
 

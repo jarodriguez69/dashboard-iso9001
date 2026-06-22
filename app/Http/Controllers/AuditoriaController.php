@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 
 class AuditoriaController extends Controller
 {
-   public function index()
+    public function index()
     {
-        // Traemos las auditorías con sus relaciones, ordenadas por fecha (las más recientes primero)
-        $auditorias = Auditoria::with(['unidad', 'auditor'])->orderBy('fecha_programada', 'desc')->get();
+        // Cambiamos 'auditor' por 'auditores' dentro del arreglo de con qué relaciones traerlos
+        $auditorias = Auditoria::with(['unidad', 'auditores'])->orderBy('fecha_programada', 'desc')->get();
         return view('auditorias.index', compact('auditorias'));
     }
 
@@ -27,24 +27,24 @@ class AuditoriaController extends Controller
 
     public function store(Request $request)
     {
-        // Validamos asegurándonos de que los IDs existan en sus respectivas tablas
         $request->validate([
             'unidad_id' => 'required|exists:unidades,id',
-            'auditor_id' => 'required|exists:auditores,id',
+            'auditores' => 'required|array', // Ahora validamos que sea un array
+            'auditores.*' => 'exists:auditores,id', // Validamos que cada ID exista
             'tipo' => 'required|in:Interna,Externa',
             'fecha_programada' => 'required|date',
         ]);
 
-        // Capturamos los datos
-        $data = $request->all();
-        // Si el checkbox de "realizada" no se marca, no viaja en el request, por lo que forzamos un boolean
+        $data = $request->except('auditores'); // Sacamos los auditores del data principal
         $data['realizada'] = $request->has('realizada');
 
-        // Guardamos
-        Auditoria::create($data);
+        // 1. Creamos la auditoría
+        $auditoria = Auditoria::create($data);
+        
+        // 2. Sincronizamos los auditores en la tabla intermedia
+        $auditoria->auditores()->sync($request->auditores);
 
-        return redirect()->route('auditorias.index')
-                         ->with('success', 'Auditoría programada correctamente.');
+        return redirect()->route('auditorias.index')->with('success', 'Auditoría programada correctamente.');
     }
 
    public function edit(Auditoria $auditoria)
@@ -58,15 +58,20 @@ class AuditoriaController extends Controller
     {
         $request->validate([
             'unidad_id' => 'required|exists:unidades,id',
-            'auditor_id' => 'required|exists:auditores,id',
+            'auditores' => 'required|array',
+            'auditores.*' => 'exists:auditores,id',
             'tipo' => 'required|in:Interna,Externa',
             'fecha_programada' => 'required|date',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('auditores');
         $data['realizada'] = $request->has('realizada');
 
+        // 1. Actualizamos la auditoría
         $auditoria->update($data);
+        
+        // 2. Sincronizamos los auditores (agrega los nuevos y quita los desmarcados)
+        $auditoria->auditores()->sync($request->auditores);
 
         return redirect()->route('auditorias.index')->with('success', 'Auditoría actualizada.');
     }
@@ -79,8 +84,17 @@ class AuditoriaController extends Controller
 
     public function informe(Auditoria $auditoria)
     {
-        // Cargamos los hallazgos relacionados con esta auditoría
-        $hallazgos = $auditoria->hallazgos()->get();
-        return view('auditorias.informe', compact('auditoria', 'hallazgos'));
+        // Cargamos la unidad, los auditores y los hallazgos asociados
+        $auditoria->load(['unidad', 'auditores', 'hallazgos']);
+
+        // Separamos los hallazgos por clasificación para facilitar el armado de las tablas en Blade
+        $fortalezas = $auditoria->hallazgos->where('clasificacion', 'FO');
+        $oportunidades = $auditoria->hallazgos->where('clasificacion', 'OM');
+        $observaciones = $auditoria->hallazgos->where('clasificacion', 'OB');
+        $noConformidades = $auditoria->hallazgos->where('clasificacion', 'NC');
+
+        return view('auditorias.informe', compact(
+            'auditoria', 'fortalezas', 'oportunidades', 'observaciones', 'noConformidades'
+        ));
     }
 }

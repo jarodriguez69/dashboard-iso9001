@@ -14,6 +14,10 @@
                         <input type="text" name="nombre" class="form-control" value="{{ old('nombre', $unidad->nombre) }}" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Domicilio</label>
+                        <input type="text" name="domicilio" class="form-control" value="{{ old('domicilio', $unidad->domicilio) }}">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Centro Judicial</label>
                         <input type="text" name="centro_judicial" class="form-control" value="{{ old('centro_judicial', $unidad->centro_judicial) }}">
                     </div>

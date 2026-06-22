@@ -27,16 +27,13 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label required">Auditor Asignado</label>
-                            <select name="auditor_id" class="form-select @error('auditor_id') is-invalid @enderror" required>
-                                <option value="">Seleccione un auditor...</option>
+                            <label class="form-label required">Equipo Auditor (Ctrl/Cmd + Clic para elegir varios)</label>
+                            <select name="auditores[]" class="form-select @error('auditores') is-invalid @enderror" multiple required style="height: 100px;">
                                 @foreach($auditores as $auditor)
-                                    <option value="{{ $auditor->id }}" {{ old('auditor_id') == $auditor->id ? 'selected' : '' }}>
-                                        {{ $auditor->nombre }} ({{ $auditor->tipo }})
-                                    </option>
+                                    <option value="{{ $auditor->id }}">{{ $auditor->nombre }} ({{ $auditor->tipo }})</option>
                                 @endforeach
                             </select>
-                            @error('auditor_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            @error('auditores') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
 

@@ -8,7 +8,7 @@
     <div class="col-md-8 offset-md-2">
         <div class="card">
             
-            <form action="{{ route('auditores.store') }}" method="POST">
+            <form action="{{ route('auditores.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="mb-3">
@@ -28,6 +28,18 @@
                         @error('tipo')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Imagen de la Firma (PNG con fondo transparente recomendado)</label>
+                        <input type="file" name="firma" class="form-control @error('firma') is-invalid @enderror">
+                        @if(isset($auditor) && $auditor->firma)
+                            <div class="mt-2">
+                                <small class="text-muted d-block">Firma actual:</small>
+                                <img src="{{ asset('storage/' . $auditor->firma) }}" width="150" class="border p-1">
+                            </div>
+                        @endif
+                        @error('firma') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
                 <div class="card-footer text-end">

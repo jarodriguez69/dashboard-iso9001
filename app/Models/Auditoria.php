@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Auditoria extends Model
 {
-    protected $fillable = ['unidad_id', 'auditor_id', 'auditor_id','tipo', 'fecha_programada', 'realizada', 'alcance', 'comentarios'];
+    protected $fillable = ['unidad_id', 'tipo', 'fecha_programada', 'realizada', 'alcance', 'comentarios'];
     protected $table = 'auditorias';
 
     public function unidad()
@@ -14,9 +14,9 @@ class Auditoria extends Model
         return $this->belongsTo(Unidad::class);
     }
 
-    public function auditor()
+    public function auditores()
     {
-        return $this->belongsTo(Auditor::class);
+        return $this->belongsToMany(Auditor::class);
     }
 
     public function hallazgos()
