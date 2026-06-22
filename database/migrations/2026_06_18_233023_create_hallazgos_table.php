@@ -24,11 +24,12 @@ return new class extends Migration
             $table->text('desvio_detectado');
             $table->text('analisis_causa')->nullable();
             $table->text('correccion')->nullable(); // Acción inmediata
+            $table->text('responsable_correccion')->nullable(); // responsable de la unidad
+            $table->date('fecha_correccion')->nullable(); // fecha tentativa
             $table->text('accion_correctiva')->nullable(); // Acción definitiva
-            
-            // Gestión
-            $table->string('responsable')->nullable(); // Por ahora texto, luego puede ser una FK
-            $table->date('fecha_limite')->nullable();
+            $table->text('responsable_accion_correctiva')->nullable(); // responsable de la unidad
+            $table->date('fecha_accion_correctiva')->nullable(); // fecha tentativa
+            $table->date('fecha_limite')->nullable(); // fecha límite para cerrar el hallazgo
             $table->string('estado')->default('Abierta'); // Abierta, En Proceso, Cerrada
             
             $table->timestamps();

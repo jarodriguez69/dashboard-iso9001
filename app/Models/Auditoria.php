@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Auditoria extends Model
 {
-    protected $fillable = ['unidad_id', 'auditor_id', 'auditor_id','tipo', 'fecha_programada', 'realizada'];
+    protected $fillable = ['unidad_id', 'auditor_id', 'auditor_id','tipo', 'fecha_programada', 'realizada', 'alcance', 'comentarios'];
     protected $table = 'auditorias';
 
     public function unidad()

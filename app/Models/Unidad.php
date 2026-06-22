@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unidad extends Model
 {
-    protected $fillable = ['nombre', 'descripcion'];
+    protected $fillable = ['nombre', 'descripcion', 'jurisdiccional', 'activo', 'centro_judicial'];
     protected $table = 'unidades';
     
     public function auditorias()

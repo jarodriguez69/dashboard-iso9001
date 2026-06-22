@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Editar Auditor')
-@section('page-title', 'Editar Perfil: ' . $auditor->nombre)
+@section('page-title', 'Editar Auditor/a: ' . $auditor->nombre)
 
 @section('content')
 <div class="row row-cards">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="card-footer text-end">
                     <a href="{{ route('auditores.index') }}" class="btn btn-link link-secondary me-2">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Actualizar Auditor</button>
+                    <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-2"></i>Actualizar Auditor</button>
                 </div>
             </form>
         </div>

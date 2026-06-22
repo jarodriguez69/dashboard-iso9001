@@ -7,9 +7,7 @@
 <div class="row row-cards">
     <div class="col-md-8 offset-md-2">
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Detalles de la Auditoría</h3>
-            </div>
+            
             <form action="{{ route('auditorias.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
@@ -46,8 +44,8 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label required">Tipo de Auditoría</label>
                             <select name="tipo" class="form-select @error('tipo') is-invalid @enderror" required>
-                                <option value="Interna" {{ old('tipo') == 'Interna' ? 'selected' : '' }}>Interna (1ra Parte)</option>
-                                <option value="Externa" {{ old('tipo') == 'Externa' ? 'selected' : '' }}>Externa (2da / 3ra Parte)</option>
+                                <option value="Interna" {{ old('tipo') == 'Interna' ? 'selected' : '' }}>Interna</option>
+                                <option value="Externa" {{ old('tipo') == 'Externa' ? 'selected' : '' }}>Externa</option>
                             </select>
                             @error('tipo') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
@@ -57,6 +55,16 @@
                             <input type="date" name="fecha_programada" class="form-control @error('fecha_programada') is-invalid @enderror" value="{{ old('fecha_programada') }}" required>
                             @error('fecha_programada') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label required">Alcance de la Auditoría</label>
+                        <textarea name="alcance" id="inputAlcance" class="form-control font-weight-bold" rows="3" required></textarea>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Comentarios Adicionales</label>
+                        <textarea name="comentarios" id="inputComentarios" class="form-control font-weight-bold" rows="3"></textarea>
                     </div>
 
                     <div class="mb-3 mt-2">

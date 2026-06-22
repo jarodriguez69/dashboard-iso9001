@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Unidades Auditables')
-@section('page-title', 'Gestión de Unidades / Áreas')
+@section('page-title', 'Gestión de Unidades')
 
 @section('content')
 <div class="row row-cards">

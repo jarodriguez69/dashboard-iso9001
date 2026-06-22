@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('unidad_id')->constrained('unidades')->onDelete('cascade');
             $table->foreignId('auditor_id')->constrained('auditores')->onDelete('cascade');
-            
+            $table->text('alcance')->nullable();
             $table->enum('tipo', ['Interna', 'Externa'])->default('Interna');
             $table->date('fecha_programada');
             $table->boolean('realizada')->default(false);
-            
+            $table->text('comentarios')->nullable();
             $table->timestamps();
         });
     }

@@ -1,15 +1,13 @@
 @extends('layouts.admin')
 
 @section('title', 'Nuevo Auditor')
-@section('page-title', 'Registrar Nuevo Auditor')
+@section('page-title', 'Registrar Nuevo Auditor/a')
 
 @section('content')
 <div class="row row-cards">
     <div class="col-md-8 offset-md-2">
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Datos del Perfil Auditor</h3>
-            </div>
+            
             <form action="{{ route('auditores.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
@@ -24,8 +22,8 @@
                     <div class="mb-3">
                         <label class="form-label required">Tipo de Auditor</label>
                         <select name="tipo" class="form-select @error('tipo') is-invalid @enderror" required>
-                            <option value="Interno" {{ old('tipo') == 'Interno' ? 'selected' : '' }}>Auditor Interno (Personal de la empresa)</option>
-                            <option value="Externo" {{ old('tipo') == 'Externo' ? 'selected' : '' }}>Auditor Externo (Consultor / Ente Certificador)</option>
+                            <option value="Interno" {{ old('tipo') == 'Interno' ? 'selected' : '' }}>Auditor Interno</option>
+                            <option value="Externo" {{ old('tipo') == 'Externo' ? 'selected' : '' }}>Auditor Externo</option>
                         </select>
                         @error('tipo')
                             <div class="invalid-feedback">{{ $message }}</div>

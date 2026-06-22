@@ -78,28 +78,44 @@
                     </div>
 
                     <hr>
-                    <h4 class="mb-3">Tratamiento (Para completar luego por el auditado)</h4>
+                    <h4 class="mb-3 text-primary"><i class="ti ti-tools me-2"></i> Tratamiento y Resolución</h4>
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Análisis de Causa Raíz</label>
                             <textarea name="analisis_causa" class="form-control" rows="2"></textarea>
                         </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Corrección (Acción Inmediata)</label>
+                            <textarea name="correccion" class="form-control" rows="2"></textarea>
+                        </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Acción Correctiva Propuesta</label>
+                            <label class="form-label">Responsable Corrección</label>
+                            <input type="text" name="responsable_correccion" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha Corrección</label>
+                            <input type="date" name="fecha_correccion" class="form-control">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Acción Correctiva</label>
                             <textarea name="accion_correctiva" class="form-control" rows="2"></textarea>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Responsable</label>
-                            <input type="text" name="responsable" class="form-control">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Responsable Acción Correctiva</label>
+                            <input type="text" name="responsable_accion_correctiva" class="form-control">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha Acción Correctiva</label>
+                            <input type="date" name="fecha_accion_correctiva" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Fecha Límite</label>
                             <input type="date" name="fecha_limite" class="form-control">
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Estado</label>
-                            <select name="estado" class="form-select">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label font-weight-bold">Estado Actual</label>
+                            <select name="estado" class="form-select bg-blue-lt">
                                 <option value="Abierta">Abierta</option>
                                 <option value="En Proceso">En Proceso</option>
                                 <option value="Cerrada">Cerrada</option>
@@ -111,7 +127,7 @@
                 <div class="card-footer text-end">
                     <a href="{{ route('hallazgos.index') }}" class="btn btn-link link-secondary me-2">Cancelar</a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="ti ti-device-floppy me-2"></i> Guardar Hallazgo Definitivo
+                        <i class="ti ti-device-floppy me-2"></i> Guardar Hallazgo
                     </button>
                 </div>
             </div>
