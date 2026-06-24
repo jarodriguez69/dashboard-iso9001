@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table id="miTabla" class="table card-table table-vcenter text-nowrap datatable">
+                <table id="miTabla" class="table card-table table-vcenter datatable">
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -74,12 +74,14 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('auditorias.edit', $auditoria->id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
-                                <form action="{{ route('auditorias.destroy', $auditoria->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-                                </form>
+                                @if(Auth::user()->rol === 'Admin')
+                                    <a href="{{ route('auditorias.edit', $auditoria->id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                    <form action="{{ route('auditorias.destroy', $auditoria->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                    </form>
+                                @endif
                                 <a href="{{ route('auditorias.informe', $auditoria->id) }}" target="_blank" class="btn btn-sm btn-outline-info">
                                     <i class="ti ti-printer"></i> Imprimir Informe
                                 </a>

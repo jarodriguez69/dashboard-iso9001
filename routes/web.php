@@ -93,8 +93,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Puedes agrupar esto luego, pero por ahora lo dejamos en la raíz
-    Route::resource('unidades', UnidadController::class)->parameters(['unidades' => 'unidad']);
-    Route::resource('auditores', AuditorController::class)->parameters(['auditores' => 'auditor']);
+    Route::resource('unidades', UnidadController::class)->parameters(['unidades' => 'unidad'])->middleware('rol:Admin');
+    Route::resource('auditores', AuditorController::class)->parameters(['auditores' => 'auditor'])->middleware('rol:Admin');
     Route::resource('auditorias', AuditoriaController::class);
     Route::resource('hallazgos', HallazgoController::class);
 

@@ -37,6 +37,7 @@
                   <span class="nav-link-title">Panel Principal</span>
                 </a>
               </li>
+              @if(Auth::user()->rol === 'Admin')
               <li class="nav-item">
                 <a class="nav-link" href="{{ route('unidades.index') }}" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-building-community"></i></span>
@@ -49,6 +50,7 @@
                   <span class="nav-link-title">Equipo Auditor</span>
                 </a>
               </li>
+              @endif
               <li class="nav-item">
                 <a class="nav-link" href="{{ route('auditorias.index') }}" >
                   <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-calendar-event"></i></span>

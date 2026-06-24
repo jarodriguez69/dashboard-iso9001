@@ -50,6 +50,13 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (! Auth::user()->aprobado) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Tu cuenta ha sido registrada pero requiere aprobación del Administrador.',
+            ]);
+        }
+        
         RateLimiter::clear($this->throttleKey());
     }
 

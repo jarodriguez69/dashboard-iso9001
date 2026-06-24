@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table id="miTabla" class="table card-table table-vcenter text-nowrap datatable">
+                <table id="miTabla" class="table card-table table-vcenter datatable">
                     <thead>
                         <tr>
                             <th>ID</th>
