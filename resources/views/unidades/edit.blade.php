@@ -36,6 +36,10 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label required">Correo Electrónico de Contacto</label>
+                        <input type="email" name="email" class="form-control" value="{{ old('email', $unidad->email) }}" required>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Descripción</label>
                         <textarea name="descripcion" class="form-control" rows="4">{{ old('descripcion', $unidad->descripcion) }}</textarea>
                     </div>

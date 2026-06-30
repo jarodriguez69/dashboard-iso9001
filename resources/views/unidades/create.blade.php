@@ -55,6 +55,19 @@
                         @enderror
                     </div>
 
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Correo Electrónico de Contacto</label>
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
+                            placeholder="ejemplo@unidad.com" 
+                            value="{{ old('email', $unidad->email ?? '') }}" required>
+                        <small class="form-hint text-secondary">
+                            A esta dirección se enviará el enlace de la encuesta de satisfacción.
+                        </small>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">Descripción o Funciones Principales</label>
                         <textarea name="descripcion" class="form-control" rows="4" placeholder="Opcional. Describe brevemente qué hace esta unidad.">{{ old('descripcion') }}</textarea>

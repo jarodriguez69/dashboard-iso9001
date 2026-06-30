@@ -50,6 +50,12 @@
                   <span class="nav-link-title">Equipo Auditor</span>
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('encuestas.index') }}" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-file-text"></i></span>
+                  <span class="nav-link-title">Encuestas</span>
+                </a>
+              </li>
               @endif
               <li class="nav-item">
                 <a class="nav-link" href="{{ route('auditorias.index') }}" >

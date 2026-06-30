@@ -9,6 +9,7 @@ use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\HallazgoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EncuestaController;
 
 Route::get('/', function () {
     return redirect('/login'); // Redirigimos al login por defecto
@@ -97,9 +98,17 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('auditores', AuditorController::class)->parameters(['auditores' => 'auditor'])->middleware('rol:Admin');
     Route::resource('auditorias', AuditoriaController::class);
     Route::resource('hallazgos', HallazgoController::class);
+    Route::resource('encuestas', EncuestaController::class)->middleware('rol:Admin');
+    
+    // Ruta para enviar la encuesta de satisfacción
+    Route::post('auditorias/{auditoria}/enviar-encuesta', [AuditoriaController::class, 'enviarEncuesta'])->name('auditorias.enviar_encuesta');
 
     
     Route::get('auditorias/{auditoria}/informe', [AuditoriaController::class, 'informe'])->name('auditorias.informe');
 });
+
+// RUTAS PÚBLICAS (Acceso libre mediante token de seguridad)
+Route::get('/encuesta/{token}/{encuesta_id}', [\App\Http\Controllers\EncuestaController::class, 'responder'])->name('encuestas.responder');
+Route::post('/encuesta/{token}/{encuesta_id}/guardar', [\App\Http\Controllers\EncuestaController::class, 'guardarRespuesta'])->name('encuestas.guardar_respuesta');
 
 require __DIR__.'/auth.php';

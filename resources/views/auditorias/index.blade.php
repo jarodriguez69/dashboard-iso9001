@@ -81,6 +81,58 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                                     </form>
+                                    
+                                    <!-- Botón que abre el Modal -->
+<button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalEncuesta-{{ $auditoria->id }}" title="Enviar Encuesta de Satisfacción">
+    <i class="ti ti-mail me-1"></i> Encuesta
+</button>
+
+<!-- Modal de Selección de Encuesta -->
+<div class="modal modal-blur fade" id="modalEncuesta-{{ $auditoria->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form action="{{ route('auditorias.enviar_encuesta', $auditoria->id) }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Enviar Encuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    @if($encuestasActivas->count() > 0)
+                        <div class="mb-3">
+                            <label class="form-label required">Seleccione la encuesta a enviar:</label>
+                            <select name="encuesta_id" class="form-select" required>
+                                <option value="" disabled selected>Elegir encuesta...</option>
+                                @foreach($encuestasActivas as $encuesta)
+                                    <option value="{{ $encuesta->id }}">{{ $encuesta->titulo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="text-muted small">
+                            Se enviará al correo: 
+                            <br><strong>{{ $auditoria->unidad->email ?? '⚠️ Esta unidad NO tiene correo cargado' }}</strong>
+                        </div>
+                    @else
+                        <div class="alert alert-danger">
+                            No hay encuestas activas en el sistema. Debe crear una primero.
+                        </div>
+                    @endif
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Cancelar</button>
+                    <!-- Si no hay encuestas o la unidad no tiene mail, bloqueamos el botón -->
+                    <button type="submit" class="btn btn-success" 
+                        {{ $encuestasActivas->count() == 0 || !$auditoria->unidad->email ? 'disabled' : '' }}>
+                        <i class="ti ti-send me-1"></i> Enviar Correo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
                                 @endif
                                 <a href="{{ route('auditorias.informe', $auditoria->id) }}" target="_blank" class="btn btn-sm btn-outline-info">
                                     <i class="ti ti-printer"></i> Imprimir Informe

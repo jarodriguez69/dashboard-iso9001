@@ -6,14 +6,21 @@ use App\Models\Auditoria;
 use App\Models\Unidad;
 use App\Models\Auditor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EncuestaMail;
 
 class AuditoriaController extends Controller
 {
     public function index()
     {
-        // Cambiamos 'auditor' por 'auditores' dentro del arreglo de con qué relaciones traerlos
-        $auditorias = Auditoria::with(['unidad', 'auditores'])->orderBy('fecha_programada', 'desc')->get();
-        return view('auditorias.index', compact('auditorias'));
+        // Obtenemos las auditorías (ajusta tus relaciones según lo que ya tengas)
+        $auditorias = Auditoria::all(); 
+        
+        // NUEVO: Obtenemos todas las encuestas que estén activas
+        $encuestasActivas = \App\Models\Encuesta::where('activa', true)->get();
+
+        return view('auditorias.index', compact('auditorias', 'encuestasActivas'));
     }
 
     public function create()
@@ -96,5 +103,31 @@ class AuditoriaController extends Controller
         return view('auditorias.informe', compact(
             'auditoria', 'fortalezas', 'oportunidades', 'observaciones', 'noConformidades'
         ));
+    }
+
+    // Agregamos Request $request para poder recibir el dato del formulario
+    public function enviarEncuesta(Request $request, Auditoria $auditoria)
+    {
+        // Validamos que hayan elegido una encuesta
+        $request->validate([
+            'encuesta_id' => 'required|exists:encuestas,id'
+        ]);
+
+        if (!$auditoria->unidad->email) {
+            return redirect()->back()->with('error', 'No se puede enviar la encuesta: la unidad auditada no tiene un correo electrónico configurado.');
+        }
+
+        // Buscamos LA ENCUESTA ESPECÍFICA que eligió el usuario
+        $encuestaSeleccionada = \App\Models\Encuesta::findOrFail($request->encuesta_id);
+
+        if (!$auditoria->token_encuesta) {
+            $auditoria->token_encuesta = \Illuminate\Support\Str::random(40);
+            $auditoria->save();
+        }
+
+        // Enviamos el correo pasando la encuesta elegida
+        Mail::to($auditoria->unidad->email)->send(new EncuestaMail($auditoria, $encuestaSeleccionada));
+
+        return redirect()->back()->with('success', 'La encuesta ha sido enviada exitosamente al correo de la unidad.');
     }
 }

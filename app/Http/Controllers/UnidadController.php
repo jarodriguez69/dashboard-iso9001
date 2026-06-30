@@ -25,7 +25,8 @@ class UnidadController extends Controller
         // Validamos que el nombre sea obligatorio
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string'
+            'descripcion' => 'nullable|string',
+            'email' => 'required|email'
         ]);
 
         // Guardamos en la base de datos
@@ -45,7 +46,8 @@ class UnidadController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string'
+            'descripcion' => 'nullable|string',
+            'email' => 'required|email'
         ]);
 
         $unidad->update($request->all());
