@@ -9,7 +9,7 @@ class Encuesta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titulo', 'activa'];
+    protected $fillable = ['titulo', 'activa', 'analisis_ia'];
 
     public function preguntas()
     {

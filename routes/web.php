@@ -105,10 +105,12 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::get('auditorias/{auditoria}/informe', [AuditoriaController::class, 'informe'])->name('auditorias.informe');
+    Route::post('/encuestas/{encuesta}/analizar-ia', [EncuestaController::class, 'analizarConIA'])->name('encuestas.analizar_ia');
+
 });
 
 // RUTAS PÚBLICAS (Acceso libre mediante token de seguridad)
-Route::get('/encuesta/{token}/{encuesta_id}', [\App\Http\Controllers\EncuestaController::class, 'responder'])->name('encuestas.responder');
-Route::post('/encuesta/{token}/{encuesta_id}/guardar', [\App\Http\Controllers\EncuestaController::class, 'guardarRespuesta'])->name('encuestas.guardar_respuesta');
+Route::get('/encuesta/{token}/{encuesta_id}', [EncuestaController::class, 'responder'])->name('encuestas.responder');
+Route::post('/encuesta/{token}/{encuesta_id}/guardar', [EncuestaController::class, 'guardarRespuesta'])->name('encuestas.guardar_respuesta');
 
 require __DIR__.'/auth.php';
