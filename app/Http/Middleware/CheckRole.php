@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    // Usamos ...$roles para que acepte múltiples roles separados por coma
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // Si el usuario está logueado y su rol coincide con el que pedimos, lo dejamos pasar
-        if (auth()->check() && auth()->user()->rol === $role) {
+        // Verificamos si el rol del usuario está dentro de los roles permitidos
+        if (auth()->check() && in_array(auth()->user()->rol, $roles)) {
             return $next($request);
         }
 
-        // Si no cumple, lo expulsamos con una pantalla de "Acceso Denegado"
-        abort(403, 'Acceso denegado. No tienes permisos de Administrador para ver esta pantalla.');
+        abort(403, 'Acceso denegado. No tienes permisos para ver esta pantalla.');
     }
 }

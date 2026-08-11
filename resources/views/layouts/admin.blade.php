@@ -38,44 +38,54 @@
                 </a>
               </li>
               @if(Auth::user()->rol === 'Admin')
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('unidades.index') }}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-building-community"></i></span>
-                  <span class="nav-link-title">Unidades</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('auditores.index') }}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
-                  <span class="nav-link-title">Equipo Auditor</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('encuestas.index') }}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-file-text"></i></span>
-                  <span class="nav-link-title">Encuestas</span>
-                </a>
-              </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('unidades.index') }}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-building-community"></i></span>
+                    <span class="nav-link-title">Unidades</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('auditores.index') }}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
+                    <span class="nav-link-title">Equipo Auditor</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('encuestas.index') }}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-file-text"></i></span>
+                    <span class="nav-link-title">Encuestas</span>
+                  </a>
+                </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('auditorias.index') }}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-calendar-event"></i></span>
+                    <span class="nav-link-title">Programa de Auditorías</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('hallazgos.index') }}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-alert-triangle"></i></span>
+                    <span class="nav-link-title">Hallazgos</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('redactor') }}" >
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-refresh-alert"></i></span>
+                    <span class="nav-link-title">Asistente IA para Redacción de Hallazgos</span>
+                  </a>
+                </li>
               @endif
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('auditorias.index') }}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-calendar-event"></i></span>
-                  <span class="nav-link-title">Programa de Auditorías</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('hallazgos.index') }}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-alert-triangle"></i></span>
-                  <span class="nav-link-title">Hallazgos</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('redactor') }}" >
-                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-refresh-alert"></i></span>
-                  <span class="nav-link-title">Asistente IA para Redacción de Hallazgos</span>
-                </a>
-              </li>
+              @if(Auth::check() && in_array(Auth::user()->rol, ['User', 'Admin']))
+                  <li class="nav-item">
+                      <a class="nav-link" href="{{ route('reportes.index') }}" >
+                          <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-clipboard-list"></i></span>
+                          <span class="nav-link-title">Mejora Continua</span>
+                      </a>
+                  </li>
+              @endif
             </ul>
+            
             @auth
             <div class="mt-auto p-3 w-100 border-top">
                 <div class="d-flex align-items-center mb-3">

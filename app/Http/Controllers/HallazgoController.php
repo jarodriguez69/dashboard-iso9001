@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Hallazgo;
 use App\Models\Auditoria;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 class HallazgoController extends Controller
 {
     public function index(Request $request)
     {
         // 1. Iniciamos la consulta base
-        $query = Hallazgo::with('auditoria.unidad');
+        $query = Hallazgo::whereNotNull('auditoria_id')->with('auditoria.unidad');
 
         // 2. Aplicamos filtros si el usuario buscó algo
         if ($request->filled('buscar')) {
@@ -94,7 +94,7 @@ class HallazgoController extends Controller
             'clasificacion' => 'required|string',
             'desvio_detectado' => 'required|string',
         ]);
-
+        
         // Guardamos todo en bloque (asegúrate de que los nombres de los inputs coincidan con la BD)
         Hallazgo::create($request->all());
 

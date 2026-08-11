@@ -107,6 +107,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('auditorias/{auditoria}/informe', [AuditoriaController::class, 'informe'])->name('auditorias.informe');
     Route::post('/encuestas/{encuesta}/analizar-ia', [EncuestaController::class, 'analizarConIA'])->name('encuestas.analizar_ia');
 
+    // RUTAS PARA MEJORA CONTINUA (Accesible para Responsables y Admins)
+    Route::middleware(['auth', 'rol:User,Admin'])->group(function () {
+        
+        Route::resource('reportes-diarios', \App\Http\Controllers\ReporteDiarioController::class)
+            ->names('reportes')
+            ->parameters(['reportes-diarios' => 'reporte']); // <-- ESTO SOLUCIONA EL ERROR
+            
+    });
 });
 
 // RUTAS PÚBLICAS (Acceso libre mediante token de seguridad)
