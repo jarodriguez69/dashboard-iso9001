@@ -23,11 +23,11 @@
                         
                         <div class="col-md-3 mb-3">
                             <label class="form-label required">Clasificación</label>
-                            <select name="tipo" class="form-select" required>
-                                <option value="NC" {{ (old('tipo', $reporte->tipo) == 'NC') ? 'selected' : '' }}>No Conformidad (NC)</option>
-                                <option value="OM" {{ (old('tipo', $reporte->tipo) == 'OM') ? 'selected' : '' }}>Oportunidad de Mejora (OM)</option>
-                                <option value="OB" {{ (old('tipo', $reporte->tipo) == 'OB') ? 'selected' : '' }}>Observación (OB)</option>
-                                <option value="FO" {{ (old('tipo', $reporte->tipo) == 'FO') ? 'selected' : '' }}>Fortaleza (FO)</option>
+                            <select name="clasificacion" class="form-select" required>
+                                <option value="NC" {{ (old('clasificacion', $reporte->clasificacion) == 'NC') ? 'selected' : '' }}>No Conformidad (NC)</option>
+                                <option value="OM" {{ (old('clasificacion', $reporte->clasificacion) == 'OM') ? 'selected' : '' }}>Oportunidad de Mejora (OM)</option>
+                                <option value="OB" {{ (old('clasificacion', $reporte->clasificacion) == 'OB') ? 'selected' : '' }}>Observación (OB)</option>
+                                <option value="FO" {{ (old('clasificacion', $reporte->clasificacion) == 'FO') ? 'selected' : '' }}>Fortaleza (FO)</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">

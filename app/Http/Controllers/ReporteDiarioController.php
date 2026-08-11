@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hallazgo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReporteDiarioController extends Controller
 {
@@ -33,27 +34,28 @@ class ReporteDiarioController extends Controller
         try
         {
             $request->validate([
-            'tipo' => 'required|in:NC,OM,OB,FO',
-            'clausula' => 'nullable|string|max:255',
-            'desvio_detectado' => 'required|string',
-            // Agrega aquí otras validaciones que tengas en tu HallazgoController (ej: analisis_causa, acciones, etc.)
-        ]);
+                'clasificacion' => 'required|in:NC,OM,OB,FO',
+                'clausula' => 'nullable|string|max:255',
+                'desvio_detectado' => 'required|string',
+                // Agrega aquí otras validaciones que tengas en tu HallazgoController (ej: analisis_causa, acciones, etc.)
+            ]);
 
-        // Guardamos el hallazgo inyectando automáticamente los datos de contexto
-        Hallazgo::create([
-            'origen' => 'Reporte Diario',
-            'unidad_id' => Auth::user()->unidad_id,
-            'auditoria_id' => null, // No pertenece a ninguna auditoría
-            'tipo' => $request->tipo,
-            'clausula' => $request->clausula,
-            'desvio_detectado' => $request->desvio_detectado,
-            'estado' => 'Abierto', // Estado inicial por defecto
-        ]);
-
-        return redirect()->route('reportes.index')->with('success', 'Reporte registrado exitosamente para la Mejora Continua.');
+            // Guardamos el hallazgo inyectando automáticamente los datos de contexto
+            Hallazgo::create([
+                'origen' => 'Reporte Diario',
+                'unidad_id' => Auth::user()->unidad_id,
+                'auditoria_id' => null, // No pertenece a ninguna auditoría
+                'clasificacion' => $request->clasificacion,
+                'clausula' => $request->clausula,
+                'desvio_detectado' => $request->desvio_detectado,
+                'estado' => 'Abierto', // Estado inicial por defecto
+            ]);
+            
+            return redirect()->route('reportes.index')->with('success', 'Reporte registrado exitosamente para la Mejora Continua.');
         }
         catch (\Exception $e)
         {
+            Log::error("Error al guardar el reporte: " . $e->getMessage());
             return redirect()->back()->with('error', 'Error al guardar el reporte: ' . $e->getMessage());
         }
         
@@ -77,7 +79,7 @@ class ReporteDiarioController extends Controller
         }
 
         $request->validate([
-            'tipo' => 'required|in:NC,OM,OB,FO',
+            'clasificacion' => 'required|in:NC,OM,OB,FO',
             'clausula' => 'nullable|string|max:255',
             'desvio_detectado' => 'required|string',
             'estado' => 'required|in:Abierto,En Proceso,Cerrado',
