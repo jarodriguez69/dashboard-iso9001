@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Mejora Continua')
-@section('page-title', 'Reportes Diarios de mi Unidad')
+@section('page-title', 'Reportes Diarios de Unidad')
 
 @section('content')
 <div class="row row-cards">
