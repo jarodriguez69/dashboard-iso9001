@@ -44,6 +44,7 @@
                         <tr>
                             <th>Fecha</th>
                             <th>Unidad Auditada</th>
+                            <th>Alcance</th>
                             <th>Auditor Asignado</th>
                             <th>Tipo</th>
                             <th>Estado</th>
@@ -58,6 +59,7 @@
                                 {{ \Carbon\Carbon::parse($auditoria->fecha_programada)->format('d/m/Y') }}
                             </td>
                             <td class="font-weight-medium">{{ $auditoria->unidad->nombre }}</td>
+                            <td>{{ $auditoria->alcance }}</td>
                             <td>{{ $auditoria->auditores->pluck('nombre')->join(', ') }}</td>
                             <td>
                                 @if($auditoria->tipo == 'Interna')
