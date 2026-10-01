@@ -29,7 +29,7 @@
     </div>
 
     <div class="report-header">
-        INFORME DE AUDITORÍA INTERNA AL SGC - ETAPA 2 (PRESENCIAL) [cite: 1]
+        INFORME DE AUDITORÍA INTERNA AL SGC
     </div>
 
     <table class="table table-bordered info-table table-sm">
