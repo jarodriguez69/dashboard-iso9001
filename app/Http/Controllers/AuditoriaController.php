@@ -100,8 +100,30 @@ class AuditoriaController extends Controller
         $observaciones = $auditoria->hallazgos->where('clasificacion', 'OB');
         $noConformidades = $auditoria->hallazgos->where('clasificacion', 'NC');
 
+
+        // 1. Buscamos la auditoría inmediatamente anterior
+        $auditoriaAnterior = \App\Models\Auditoria::where('unidad_id', $auditoria->unidad_id) // Misma unidad
+            ->where('tipo', $auditoria->tipo)                                                 // Mismo tipo (Interna/Externa)
+            ->where('realizada', 1)                                                           // Que ya esté realizada
+            ->where('fecha_programada', '<', $auditoria->fecha_programada)                    // Fecha anterior a la actual
+            ->orderBy('fecha_programada', 'desc')                                             // Ordenamos de más nueva a más vieja
+            ->first();                                                                        // Tomamos la primera (la inmediatamente anterior)
+
+        // 2. Traemos los hallazgos si existe una auditoría previa
+        $hallazgosAnteriores = collect(); // Colección vacía por defecto
+
+        if ($auditoriaAnterior) {
+            // Si tu columna en base de datos se llama 'clasificacion', usa esta línea:
+            $hallazgosAnteriores = $auditoriaAnterior->hallazgos()
+                ->whereIn('clasificacion', ['NC', 'OM', 'OB'])
+                ->get();
+                
+            // (Nota: si en tu tabla de base de datos la columna se llama 'tipo' en lugar 
+            // de 'clasificacion', simplemente cambia 'clasificacion' por 'tipo' en el whereIn).
+        }
+
         return view('auditorias.informe', compact(
-            'auditoria', 'fortalezas', 'oportunidades', 'observaciones', 'noConformidades'
+            'auditoria', 'fortalezas', 'oportunidades', 'observaciones', 'noConformidades', 'auditoriaAnterior', 'hallazgosAnteriores'
         ));
     }
 

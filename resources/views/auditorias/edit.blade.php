@@ -48,7 +48,7 @@
                         <textarea name="alcance" id="inputAlcance" class="form-control font-weight-bold" rows="3" required>{{ old('alcance', $auditoria->alcance) }}</textarea>
                     </div>  
                     <div class="col-md-12 mb-3">
-                        <label class="form-label">Comentarios Adicionales</label>
+                        <label class="form-label">Personas Entrevistadas</label>
                         <textarea name="comentarios" id="inputComentarios" class="form-control font-weight-bold" rows="3">{{ old('comentarios', $auditoria->comentarios) }}</textarea>
                     </div>
                     <div class="mb-3 mt-2">

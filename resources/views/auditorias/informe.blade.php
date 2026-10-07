@@ -29,7 +29,7 @@
     </div>
 
     <div class="report-header">
-        INFORME DE AUDITORÍA INTERNA AL SGC
+        INFORME DE AUDITORÍA INTERNA AL SGC (Documental - Presencial)
     </div>
 
     <table class="table table-bordered info-table table-sm">
@@ -91,14 +91,52 @@
 
     <table class="table table-bordered findings-table table-sm">
         <thead>
-            <tr>
-                <th>N°</th><th>Fuente</th><th>Tipo (NC/OB/OM)</th><th>Requisito</th><th>Evidencia verificada</th><th>Resultado</th>
+            <tr class="bg-light">
+                <th>N°</th>
+                <th>Fuente</th>
+                <th>Tipo (NC/OB/OM)</th>
+                <th>Requisito</th>
+                <th>Descripción del Hallazgo</th>
+                <th>Resultado</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td colspan="6" class="text-center text-muted"><em>(Espacio reservado para seguimiento histórico)</em></td>
-            </tr>
+            @forelse($hallazgosAnteriores as $hallazgo)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <!-- Fuente: Indicamos de qué fecha viene este hallazgo -->
+                    <td>Auditoría {{ \Carbon\Carbon::parse($auditoriaAnterior->fecha_programada)->format('d/m/Y') }}</td>
+                    
+                    <!-- Tipo: NC, OM, OB -->
+                    <td class="text-center fw-bold">
+                        @if($hallazgo->clasificacion == 'NC') <span class="text-danger">NC</span>
+                        @elseif($hallazgo->clasificacion == 'OM') <span class="text-warning">OM</span>
+                        @else <span class="text-info">OB</span>
+                        @endif
+                    </td>
+                    
+                    <!-- Requisito / Cláusula -->
+                    <td>{{ $hallazgo->clausula ?? 'No especificada' }}</td>
+                    
+                    <!-- Evidencia o Descripción si no hay evidencia cargada -->
+                    <td>{{ $hallazgo->desvio_detectado }}</td>
+                    
+                    <!-- Resultado: Mostramos si sigue abierta o ya fue cerrada -->
+                    <td class="text-center">
+                        @if(in_array($hallazgo->estado, ['Cerrada', 'Cerrado']))
+                            <span class="badge bg-success">Cerrada</span>
+                        @else
+                            <span class="badge bg-danger">{{ $hallazgo->estado ?? 'Abierta' }}</span>
+                        @endif
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-3">
+                        <em>(No se registran hallazgos previos pendientes de seguimiento para esta unidad y tipo de auditoría)</em>
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 
