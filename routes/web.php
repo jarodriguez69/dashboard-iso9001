@@ -51,46 +51,66 @@ Route::middleware(['auth'])->group(function () {
             \"evidencia_objetiva\": \"(Los documentos o registros encontrados. Si no se menciona ninguna, escribe 'No declarada')\",
             \"redaccion_sugerida\": \"(El hallazgo redactado de forma formal, clara, objetiva e integrando la evidencia mencionada)\"
         }";
+        try {
+            $response = Http::withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
+                'model' => 'openai/gpt-oss-20b',
+                'messages' => [
+                    ['role' => 'user', 'content' => $prompt]
+                ],
+                'response_format' => ['type' => 'json_object'] // Forzamos a Groq a devolver JSON
+            ]);
 
-        $response = Http::withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
-            'model' => 'llama-3.1-8b-instant',
-            'messages' => [
-                ['role' => 'user', 'content' => $prompt]
-            ],
-            'response_format' => ['type' => 'json_object'] // Forzamos a Groq a devolver JSON
-        ]);
+            if ($response->successful()) {
+                $contenido = $response->json('choices.0.message.content');
+                return response($contenido)->header('Content-Type', 'application/json');
+            }
 
-        if ($response->successful()) {
-            $contenido = $response->json('choices.0.message.content');
-            return response($contenido)->header('Content-Type', 'application/json');
+            return response()->json([
+                'http_status' => $response->status(),
+                'groq_error'  => $response->json() ?? $response->body(),
+                'api_key_set' => !empty($apiKey),
+            ], 500);
+        } catch (\Throwable $e) {
+            // Captura errores de red, DNS o certificados SSL antes de llegar a Groq
+            return response()->json([
+                'tipo'    => 'Excepción de conexión cURL/Guzzle',
+                'mensaje' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json(['error' => 'Hubo un problema con la IA'], 500);
     });
 
     Route::post('/api/oraculo-iso', function (Request $request) {
         $pregunta = $request->input('pregunta');
-        $apiKey = env('GROQ_API_KEY'); // Mejor si usas env('GROQ_API_KEY')
+        $apiKey = env('GROQ_API_KEY');
 
-        // Obligamos a la IA a ser breve y directa
-        $prompt = "Eres un consultor experto en ISO 9001:2015. 
-        Responde la siguiente pregunta de forma EXTREMADAMENTE breve (máximo 3 oraciones), y menciona la cláusula aplicable si corresponde.
-        Pregunta: '{$pregunta}'";
-
-        $response = Http::withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
-            'model' => 'llama-3.1-8b-instant',
-            'messages' => [
-                ['role' => 'user', 'content' => $prompt]
-            ]
-        ]);
-
-        if ($response->successful()) {
-            return response()->json([
-                'respuesta' => $response->json('choices.0.message.content')
+        try {
+            $response = Http::timeout(15)->withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
+                'model' => 'openai/gpt-oss-20b',
+                'messages' => [
+                    ['role' => 'user', 'content' => "Eres un consultor experto en ISO 9001:2015. Responde brevemente: {$pregunta}"]
+                ]
             ]);
-        }
 
-        return response()->json(['error' => 'Error al contactar IA'], 500);
+            if ($response->successful()) {
+                return response()->json([
+                    'respuesta' => $response->json('choices.0.message.content')
+                ]);
+            }
+
+            // Devuelve el estado HTTP real y el cuerpo de respuesta de Groq
+            return response()->json([
+                'http_status' => $response->status(),
+                'groq_error'  => $response->json() ?? $response->body(),
+                'api_key_set' => !empty($apiKey),
+            ], 500);
+
+        } catch (\Throwable $e) {
+            // Captura errores de red, DNS o certificados SSL antes de llegar a Groq
+            return response()->json([
+                'tipo'    => 'Excepción de conexión cURL/Guzzle',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
     });
 
     // Puedes agrupar esto luego, pero por ahora lo dejamos en la raíz
