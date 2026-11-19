@@ -171,9 +171,14 @@
 
         <div class="col-lg-4">
             <div class="card h-100">
-                <div class="card-header"><h3 class="card-title">Carga Total de Auditores</h3></div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">Carga Total de Auditores</h3>
+                    <button type="button" id="btn-exportar-auditores" class="btn btn-sm btn-outline-success">
+                        Exportar a Excel
+                    </button>
+                </div>
                 <div class="card-body p-0">
-                    <table class="table table-vcenter card-table">
+                    <table id="tabla-carga-auditores" class="table table-vcenter card-table">
                         <tbody>
                             @foreach($topAuditores as $top)
                             <tr>
@@ -269,7 +274,7 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
     // Gráfico 1: Avance Realizadas vs Pendientes
     @if($realizadas > 0 || $pendientes > 0)
@@ -312,6 +317,30 @@
             document.getElementById('loadingIA').style.display = 'none';
             document.getElementById('respuestaIA').innerHTML = `<b>Respuesta:</b> ${data.respuesta}`;
             document.getElementById('respuestaIA').style.display = 'block';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('btn-exportar-auditores');
+        if (!btn) return;
+
+        btn.addEventListener('click', function () {
+            const filas = [['Auditor', 'Cantidad de auditorías']];
+
+            document.querySelectorAll('#tabla-carga-auditores tbody tr').forEach(function (tr) {
+                const nombre = tr.querySelector('.font-weight-medium')?.textContent.trim() ?? '';
+                const cantidad = parseInt(tr.querySelector('.badge')?.textContent, 10) || 0;
+                filas.push([nombre, cantidad]);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(filas);
+            ws['!cols'] = [{ wch: 35 }, { wch: 22 }];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Carga Auditores');
+
+            const hoy = new Date().toISOString().slice(0, 10);
+            XLSX.writeFile(wb, `carga_total_auditores_${hoy}.xlsx`);
         });
     });
 </script>

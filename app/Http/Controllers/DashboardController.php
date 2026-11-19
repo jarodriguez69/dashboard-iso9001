@@ -74,15 +74,15 @@ class DashboardController extends Controller
         $inicioSemana = Carbon::now()->startOfWeek();
         $finSemana = Carbon::now()->endOfWeek();
         $auditoriasSemana = Auditoria::with(['unidad', 'auditores'])->whereBetween('fecha_programada', [$inicioSemana, $finSemana])->get();
-        // 4. INDICADOR CORREGIDO: Top Auditores filtrado por el año seleccionado
+        // 4. INDICADOR CORREGIDO: Top Auditores filtrado por el año seleccionado y por tipo de auditor
         $topAuditores = Auditor::withCount(['auditorias' => function($query) use ($anoSeleccionado) {
                                     $query->whereYear('fecha_programada', $anoSeleccionado);
                                }])
                                ->whereHas('auditorias', function($query) use ($anoSeleccionado) {
                                     $query->whereYear('fecha_programada', $anoSeleccionado);
                                })
+                               ->where('tipo', 'Interno')
                                ->orderBy('auditorias_count', 'desc')
-                               ->take(5)
                                ->get();
 
         // Matriz de Control por Unidad (Filtrado por Año)
